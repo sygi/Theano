@@ -470,6 +470,18 @@ class TestRepeatOp(utt.InferShapeTester):
                         assert not np.any([isinstance(n.op, RepeatOp) 
                                            for n in f.maker.fgraph.toposort()])
  
+    def test_zero_repeat(self):
+        from theano.printing import debugprint
+#        theano.config.profile = True
+#        theano.config.profile_optimizer=True
+        i = theano.shared(0, name="i")
+        i_specify_shape = theano.tensor.specify_shape(i, 1)
+        y = repeat(T.constant([1]), i, axis=0)
+        z, _ = theano.scan(lambda x: x, sequences=[y])
+        f = theano.function([], z)
+        print debugprint(f)
+        print f()
+
     @attr('slow')
     def test_infer_shape(self):
         for ndim in range(4):
