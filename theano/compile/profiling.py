@@ -680,11 +680,13 @@ class ProfileStats(object):
                     else:
                         v = 0  # 'Unknown'
                 else:
+                    sh = None
                     v = 0  # 'Variable isnt created'
 
                 var_mem[out] = v
-                fct_memory[node.fgraph][node].append(v)
-                fct_shapes[node.fgraph][node].append(sh)
+                if sh:
+                    fct_memory[node.fgraph][node].append(v)
+                    fct_shapes[node.fgraph][node].append(sh)
             node_mem[node] = sum_dense
         del v
 
