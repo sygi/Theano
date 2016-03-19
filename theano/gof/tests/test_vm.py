@@ -199,11 +199,13 @@ def test_partial_function():
     x = tensor.scalar('input')
     y = x ** 2
     f = theano.function([x], [y + 7, y - 9, y / 14.], mode=Mode(
-        optimizer=None, linker=vm.VM_Linker(allow_partial_eval=True)))
+        optimizer=None, linker=vm.VM_Linker(allow_partial_eval=True)), profile=True)
 
-    assert f(3, output_subset=[0, 1, 2]) == f(3)
+    f(3, output_subset=[0, 1])
+    f.profile.print_summary()
+    """assert f(3, output_subset=[0, 1, 2]) == f(3)
     assert f(4, output_subset=[0, 2]) == [f(4)[0], f(4)[2]]
-    assert abs(max(f(5) - np.array([32., 16., 1.7857142857142858]))) < 1e-9
+    assert abs(max(f(5) - np.array([32., 16., 1.7857142857142858]))) < 1e-9"""
 
 
 def test_allow_gc_cvm():
